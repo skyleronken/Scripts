@@ -88,10 +88,17 @@ def main():
 
 	try:
 		begin_parse(options)
+
+	except (IOError, ValueError) as e:
+		# catch any issues with the files
+		print "Error with reading your files! Check to make sure read permissions are set and the file is closed!"
+		exit()
+
 	except:
 		#print "Unexpected error:", sys.exc_info()[0] DEBUG ONLY
+		#raise
 		print "Error! Make sure all files are closed, paths are accurate and options are set correctly!"
-		raise
+		exit()
 
 if __name__ == "__main__":
     main()
