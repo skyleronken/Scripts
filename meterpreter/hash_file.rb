@@ -1,15 +1,24 @@
-opts = Rex::Parser::Arguments.new(
+#
+# Meterpreter script to hash a file on the remote system
+# Provided by: Skyler Onken
+#
+
+@@exec_opts = Rex::Parser::Arguments.new(
   "-h" => [ false,"Help menu." ]
 )
 
-opts.parse(args) { |opt, idx, val|
+def usage
+  print_line("hash_file - Will hash a file")
+  print_line("USAGE: run hash_file [file]")
+  print_line(@@exec_opts)
+  raise Rex::Script::Completed
+end
+
+
+@@exec_opts.parse(args) { |opt, idx, val|
   case opt
   when "-h"
-    print_line("hash_file - Will hash a file")
-    print_line("Info is stored in " + ::File.join(Msf::Config.log_directory,"scripts", "hash_file"))
-    print_line("USAGE: run hash_file [options] [file]")
-    print_line(opts.usage)
-    raise Rex::Script::Completed
+    usage
   end
 }
 

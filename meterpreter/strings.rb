@@ -1,15 +1,30 @@
-opts = Rex::Parser::Arguments.new(
-  "-h" => [ false,"Help menu." ]
+#
+# Meterpreter script to run a linux-like 'strings' command on Windows
+# Leverages sysinternals' strings.exe binary (http://technet.microsoft.com/en-us/sysinternals/bb897439.aspx).
+# Provided by: Skyler Onken
+#
+
+@@exec_opts = Rex::Parser::Arguments.new(
+  "-h" => [ false,"Help menu." ],
+  "-a" => [ false,"Ascii-only search."],
+  "-b" => [ false,"Bytes of file to scan."],
+  "-f" => [ false,"File offset at which to start scanning."],
+  "-n" => [ false,"Minimum string length to print."],
+  "-s" => [ false,"Recurse subdirectories."],
+  "-o" => [ false,"Print offset string was located at."],
 )
 
-opts.parse(args) { |opt, idx, val|
+def usage
+  print_line("Strings - Does strings for Windows")
+  print_line("USAGE: run strings [options] [file]")
+  print_line(@@exec_opts.usage)
+  raise Rex::Script::Completed
+end
+
+@@exec_opts.parse(args) { |opt, idx, val|
   case opt
   when "-h"
-    print_line("Strings - Does strings for Windows")
-    print_line("Info is stored in " + ::File.join(Msf::Config.log_directory,"scripts", "strings"))
-    print_line("USAGE: run strings [options] [file]")
-    print_line(opts.usage)
-    raise Rex::Script::Completed
+    usage
   end
 }
 
