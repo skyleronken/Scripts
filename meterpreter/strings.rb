@@ -58,9 +58,7 @@ end
 
 host,port = client.session_host, client.session_port
 
-unsupported if client.platform !~ /win32|win64/i
-
-if unsupported
+if client.platform !~ /win32|win64/i
 	print_line("Unsupported. If *nix, use native strings command.")
 	raise Rex::Script::Completed
 end
@@ -78,7 +76,6 @@ end
 
 params_string = args[0...-1].join(" ")
 full_params_string =  "-q #{params_string}"
-full_arg_string = "#{file_to_string}"
 
 client.fs.file.upload_file("#{path}","/usr/share/metasploit-framework/data/post/strings.exe")
 cmd = "#{path} #{full_params_string} #{file_to_string}"
