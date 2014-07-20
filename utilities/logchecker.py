@@ -18,6 +18,8 @@ clean_log_file = None
 
 def instantiate_command_object(cmd):
 
+	# take command XML Object and turn it into a dictionary
+
 	cmd_obj = {}
 	cmd_obj['flags'] = []
 	cmd_obj['options'] = []
@@ -63,9 +65,11 @@ def parse_element(element):
 				list_type = True
 
 		except AttributeError:
+			# if the user fails to define the 'type' attribute within the XML, set it to whatever is passed via the -s switch.
 			list_type = global_seq
 
 		for sub_element in element.getchildren():
+			# use recursion to parse lists
 			parsed_sub_element = parse_element(sub_element)
 
 			if is_verbose: print "\tAdding [%s] to benchmark" % sub_element.tag
@@ -81,6 +85,7 @@ def parse_benchmark(input_file):
 	# Parse the benchmark xml data
 	benchmark_root = []
 	try:
+		# Remove blank text from XML, do not parse comments, try to recover from badly formed XML.
 		parser = objectify.makeparser(remove_blank_text=True,remove_comments=True,recover=True)
 		benchmark_root = objectify.parse(input_file,parser).getroot()
 
@@ -97,12 +102,13 @@ def calculate_grade(positive_hits, bench_count):
 	return "{:.0%}".format(float(positive_hits)/float(bench_count))
 
 def check_command(command):
+	# TODO
 	name = command['name']
 
 	return "\b%s\b" % name
 
-# checks, and returns the position of found command, or 0 if not found
 def check_bench(bench_e, is_seq, log_context):
+	# checks, and returns the position of found command, or -1 if not found
 
 	global logfile
 
@@ -111,10 +117,12 @@ def check_bench(bench_e, is_seq, log_context):
 		sub_is_seq, sub_list = bench_e
 
 		for sub_element in sub_list:
-
+			# notate start position within the log file mmap. This enables unsequential searching of sublists.
 			start_position = logfile.tell()
+			# recursion for searching lists within lists
 			result = check_bench(sub_element,sub_is_seq, log_context)
 
+			# if the searched list (NOT the calling list; the one extracted at after the type() check) is sequential, tke action.
 			if sub_is_seq:
 				if result < 0:
 					if is_verbose: print '\t\t[-] Failed to match next item in sequence. Breaking from sequence!'
@@ -127,10 +135,13 @@ def check_bench(bench_e, is_seq, log_context):
 					if is_seq: log_context = result
 					break
 				else:
+					# if it worked, store the location it was found at to be returned to the calling function for storage in start_location
 					log_context = result
 			else:
+				# if the list is not sequential, regardless of the result, move the mmap back to the start position.
 				logfile.seek(start_position)
 
+		# return line for reference and success check. Note: the log_context does not dictate search position. its a reference.
 		return log_context
 
 	# this is to check for 'commands'
@@ -142,12 +153,10 @@ def check_bench(bench_e, is_seq, log_context):
 		start_position = logfile.tell()
 
 		# iterate over logfile line by line, looking for command without its parameters
-		cmd_name = bench_e['name']
-
 		for line in iter(logfile.readline, ""):
 
-			if re.search(r'\b%s\b' % cmd_name, line, re.X) is not None:
-				# do stuff for positive match
+			# do stuff for positive match. This is not a full implementation. Just a filler.
+			if re.search(r'\b%s\b' % bench_e['name'], line, re.X) is not None:
 				if is_verbose: print '............Found!'
 				positive_hits += 1
 				return logfile.tell()
@@ -169,6 +178,7 @@ def begin_check(options):
 		print "[*] Start Parsing Benchmark"
 		bench = parse_benchmark(options.bench_file)
 
+		# create mmap of file so we dont store the entire thing in memory
 		global logfile
 		f = open(clean_log_file)
 		logfile = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
