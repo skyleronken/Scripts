@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 
+#
+# logchecker.py -
+#
+#  Will scrape a session log (i.e, 'screen -L' output) for various commands. Simply build an XML 'benchmark' indicating
+#  what the commands should look like. Commands can be sorted and stored in XML 'list' entities and be tagged to be executed
+#  'sequentially' or 'unsequentially'.
+#
+#	by Skyler Onken
+#
+
 import optparse
 import mmap
 import sys
@@ -211,7 +221,7 @@ def main():
                   help="File with the commands/strings to look for", metavar="BENCHMARK_FILE")
 
 	parser.add_option("-s", action="store_true", dest="sequential",
-                  help="Search for benchmarks sequentially", metavar="SEQUENTIAL")
+                  help="Search sequentially through 'list' objects when not explicitly noted in the benchmark XML", metavar="SEQUENTIAL")
 
 	parser.add_option("-v", action="store_true", dest="verbose",
                   help="Verbose output", metavar="SEQUENTIAL")
