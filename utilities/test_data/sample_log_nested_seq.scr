@@ -1,0 +1,112 @@
+bash-3.2$ lsof -i
+COMMAND     PID   USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+UserEvent   176 skyler    6u  IPv4 0xd40fe071551b1813      0t0  UDP *:*
+SystemUIS   184 skyler    7u  IPv4 0xd40fe071558c8753      0t0  UDP *:*
+Finder      185 skyler    5u  IPv4 0xd40fe0715b05011b      0t0  TCP localhost:49245->localhost:26164 (ESTABLISHED)
+Finder      185 skyler    7u  IPv4 0xd40fe0715b05011b      0t0  TCP localhost:49245->localhost:26164 (ESTABLISHED)
+sharingd    196 skyler   12u  IPv4 0xd40fe07172649fb3      0t0  UDP *:*
+GitHub      216 skyler    5u  IPv4 0xd40fe07159cd211b      0t0  TCP localhost:25035 (LISTEN)
+GitHub      216 skyler    6u  IPv6 0xd40fe071538a45fb      0t0  TCP localhost:25035 (LISTEN)
+Dropbox     246 skyler    9u  IPv4 0xd40fe07159b1a11b      0t0  TCP 192.168.1.103:54364->snt-re4-9c.sjc.dropbox.com:http (ESTABLISHED)
+Dropbox     246 skyler   20u  IPv4 0xd40fe0715b03011b      0t0  TCP localhost:26164->localhost:49245 (ESTABLISHED)
+Dropbox     246 skyler   25u  IPv4 0xd40fe071551aff4b      0t0  UDP *:17500
+Dropbox     246 skyler   28u  IPv4 0xd40fe071599bb11b      0t0  TCP *:17500 (LISTEN)
+Dropbox     246 skyler   38u  IPv4 0xd40fe07159a8e903      0t0  TCP localhost:26164 (LISTEN)
+CNSSelect   276 skyler    5u  IPv4 0xd40fe071551b19fb      0t0  UDP *:58806
+Growl       289 skyler    4u  IPv4 0xd40fe07159b1a903      0t0  TCP localhost:23053 (LISTEN)
+Growl       289 skyler    5u  IPv6 0xd40fe071538a56fb      0t0  TCP localhost:23053 (LISTEN)
+CIJScanne   350 skyler    4u  IPv4 0xd40fe07172c16813      0t0  UDP *:63074
+CIJScanne   350 skyler    5u  IPv4 0xd40fe07172ac1abb      0t0  UDP *:61880
+plugin_ho  2882 skyler   14u  IPv4 0xd40fe07159515903      0t0  TCP 192.168.1.103:49281->209-20-75-76.slicehost.net:http (CLOSE_WAIT)
+plugin_ho  2882 skyler   21u  IPv4 0xd40fe07159515903      0t0  TCP 192.168.1.103:49281->209-20-75-76.slicehost.net:http (CLOSE_WAIT)
+plugin_ho  2882 skyler   26u  IPv4 0xd40fe07159a8e11b      0t0  TCP localhost:54462->localhost:54408 (ESTABLISHED)
+Google    16770 skyler   66u  IPv4 0xd40fe07171690903      0t0  TCP 192.168.1.103:54559->iad23s25-in-f0.1e100.net:https (ESTABLISHED)
+Google    16770 skyler   88u  IPv4 0xd40fe0717171c11b      0t0  TCP 192.168.1.103:54393->74.125.22.125:https (ESTABLISHED)
+Google    16770 skyler   90u  IPv4 0xd40fe071716ee11b      0t0  TCP 192.168.1.103:54394->qh-in-f188.1e100.net:5228 (ESTABLISHED)
+Google    16770 skyler  106u  IPv4 0xd40fe071716ee903      0t0  TCP 192.168.1.103:54549->iad23s24-in-f5.1e100.net:https (ESTABLISHED)
+Google    16770 skyler  107u  IPv4 0xd40fe0715b030903      0t0  TCP 192.168.1.103:54547->iad23s24-in-f12.1e100.net:https (ESTABLISHED)
+Google    16770 skyler  108u  IPv4 0xd40fe071599bb903      0t0  TCP 192.168.1.103:54545->iad23s24-in-f20.1e100.net:https (ESTABLISHED)
+Google    16770 skyler  109u  IPv4 0xd40fe071716c311b      0t0  TCP 192.168.1.103:54554->iad23s24-in-f2.1e100.net:https (ESTABLISHED)
+Google    16770 skyler  195u  IPv4 0xd40fe071716d0903      0t0  TCP 192.168.1.103:54555->iad23s24-in-f14.1e100.net:https (ESTABLISHED)
+Google    16770 skyler  197u  IPv4 0xd40fe071716d011b      0t0  TCP 192.168.1.103:54556->iad23s25-in-f4.1e100.net:https (ESTABLISHED)
+Google    16770 skyler  412u  IPv4 0xd40fe0717168b11b      0t0  TCP 192.168.1.103:53254->173.192.82.194-static.reverse.softlayer.com:http (ESTABLISHED)
+Python    19106 skyler    4u  IPv4 0xd40fe0715818a11b      0t0  TCP localhost:54408 (LISTEN)
+Python    19106 skyler    7u  IPv4 0xd40fe07155d3f903      0t0  TCP localhost:54408->localhost:54462 (ESTABLISHED)
+bash-3.2$ whois
+usage: whois [-aAbdgiIlmQrR6] [-c country-code | -h hostname] [-p port] name ...
+bash-3.2$ whoami
+skyler
+bash-3.2$ ls -l -a
+total 120
+drwxr-xr-x  9 skyler  staff    306 Jul 20 06:39 .
+drwxr-xr-x  9 skyler  staff    306 Jul 11 17:29 ..
+-rw-r--r--@ 1 skyler  staff   6148 Jul 18 06:39 .DS_Store
+-rw-r--r--  1 skyler  staff    871 Jul 20 06:39 benchmark_test_data.xml
+-rw-r--r--  1 skyler  staff   6338 Jul 20 06:32 logchecker.py
+-rw-r--r--  1 skyler  staff    104 Jul 18 06:36 logged_commands
+-rw-r--r--  1 skyler  staff  16704 Jul 19 19:33 sample_log.scr
+-rw-r--r--  1 skyler  staff  12201 Jul 20 06:18 sample_log_break_seq.scr
+-rw-r--r--  1 skyler  staff   3720 Jul 20 06:40 screenlog.0
+bash-3.2$ pwd
+/Users/skyler/Desktop/Development/Scripts/utilities
+bash-3.2$  cd
+bash-3.2$ arp -a
+? (192.168.1.1) at 60:a4:4c:6a:48:b0 on en1 ifscope [ethernet]
+? (192.168.1.27) at cc:6d:a0:7a:66:9b on en1 ifscope [ethernet]
+? (192.168.1.55) at 88:87:17:e0:34:d9 on en1 ifscope [ethernet]
+? (192.168.1.255) at ff:ff:ff:ff:ff:ff on en1 ifscope [ethernet]
+bash-3.2$ ifconfig
+lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
+	options=3<RXCSUM,TXCSUM>
+	inet6 ::1 prefixlen 128 
+	inet 127.0.0.1 netmask 0xff000000 
+	inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1 
+	nd6 options=1<PERFORMNUD>
+gif0: flags=8010<POINTOPOINT,MULTICAST> mtu 1280
+stf0: flags=0<> mtu 1280
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=10b<RXCSUM,TXCSUM,VLAN_HWTAGGING,AV>
+	ether 3c:07:54:73:df:e5 
+	nd6 options=1<PERFORMNUD>
+	media: autoselect (none)
+	status: inactive
+en1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	ether 68:a8:6d:30:be:d4 
+	inet6 fe80::6aa8:6dff:fe30:bed4%en1 prefixlen 64 scopeid 0x5 
+	inet 192.168.1.103 netmask 0xffffff00 broadcast 192.168.1.255
+	nd6 options=1<PERFORMNUD>
+	media: autoselect
+	status: active
+en5: flags=8963<UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
+	options=60<TSO4,TSO6>
+	ether d2:00:1b:22:7a:a0 
+	media: autoselect <full-duplex>
+	status: inactive
+fw0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 4078
+	lladdr 3c:07:54:ff:fe:b2:27:aa 
+	nd6 options=1<PERFORMNUD>
+	media: autoselect <full-duplex>
+	status: inactive
+p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
+	ether 0a:a8:6d:30:be:d4 
+	media: autoselect
+	status: inactive
+bridge0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=63<RXCSUM,TXCSUM,TSO4,TSO6>
+	ether 3e:07:54:37:18:00 
+	Configuration:
+		id 0:0:0:0:0:0 priority 0 hellotime 0 fwddelay 0
+		maxage 0 holdcnt 0 proto stp maxaddr 100 timeout 1200
+		root id 0:0:0:0:0:0 priority 0 ifcost 0 port 0
+		ipfilter disabled flags 0x2
+	member: en5 flags=3<LEARNING,DISCOVER>
+	        ifmaxaddr 0 port 6 priority 0 path cost 0
+	nd6 options=1<PERFORMNUD>
+	media: <unknown type>
+	status: inactive
+utun0: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1380
+	inet6 fe80::bc26:4499:ec7e:2330%utun0 prefixlen 64 scopeid 0xa 
+	inet6 fd71:a9a6:a360:8773:bc26:4499:ec7e:2330 prefixlen 64 
+	nd6 options=1<PERFORMNUD>
+bash-3.2$ exit
+exit

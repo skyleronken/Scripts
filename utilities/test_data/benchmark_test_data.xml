@@ -1,0 +1,50 @@
+<list type='unsequential'>
+	<list type='sequential'>
+		<command>
+			<name>lsof</name>
+			<flag>-i</flag>
+		</command>
+		<command>
+			<name>whois</name>
+			<argument>google.com</argument>
+		</command>
+		<!-- this is a comment -->
+		<list type='unsequential'>
+			<command>
+				<name>whoami</name>
+			</command>
+			<command>
+				<name>netstat</name>
+				<flag>-n</flag>
+				<flag>-a</flag>
+				<option>
+					<flag>-p</flag>
+					<value>TCP</value>
+				</option>
+			</command>
+			<command>
+				<name>ls</name>
+				<flag>-l</flag>
+				<flag>-a</flag>
+			</command>
+		</list>
+		<command>
+			<name>pwd</name>
+		</command>
+		<list type="sequential">
+			<command>
+				<name>cd</name>
+			</command>
+			<command>
+				<name>pwd</name>
+			</command>
+		</list>
+		<command>
+			<name>arp</name>
+			<flag>-a</flag>
+		</command>
+	</list>
+<command>
+	<name>ifconfig</name>
+</command>
+</list>

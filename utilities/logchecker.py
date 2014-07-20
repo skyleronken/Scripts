@@ -3,65 +3,191 @@
 import optparse
 import mmap
 import sys
+import re
+from lxml import objectify
+from lxml.etree import XMLSyntaxError
+import subprocess
+from pipes import quote
 
+positive_hits = 0
+bench_count = 0
+global_seq = False
+logfile = None
+is_verbose = False
+clean_log_file = None
 
-def process_benchmark(input_file):
+def instantiate_command_object(cmd):
 
-	# read in lines of benchmark file into memory. Consider revising if benchmark files become too large.
-	# strip out the newline characters in the process.
-	lines = [line.rstrip('\n') for line in open(input_file)]
+	cmd_obj = {}
+	cmd_obj['flags'] = []
+	cmd_obj['options'] = []
+	cmd_obj['arguments'] = []
 
-	return lines
+	for element in cmd.getchildren():
+		
+		if element.tag in "name":
+			cmd_obj['name'] = element.text
+
+		if element.tag in "flag":
+			cmd_obj['flags'].append(element.text)
+
+		if element.tag in "argument":
+			cmd_obj['arguments'].append(element.text)
+
+		if element.tag in "option":
+			flag = element.find('flag')
+			value = element.find('value')
+			cmd_obj['options'].append((flag,value))
+
+	return cmd_obj
+
+def parse_element(element):
+
+	global bench_count
+	global global_seq
+
+	enumerated_element = None
+
+	if element.tag in "command":
+		cmd_obj = instantiate_command_object(element)
+		enumerated_element = cmd_obj
+		bench_count += 1
+
+	if element.tag in "list:":
+		list_obj = []
+		try:
+			list_type = element.attrib['type']
+			if list_type == "unsequential": 
+				list_type = False
+			else:
+				list_type = True
+
+		except AttributeError:
+			list_type = global_seq
+
+		for sub_element in element.getchildren():
+			parsed_sub_element = parse_element(sub_element)
+
+			if is_verbose: print "\tAdding [%s] to benchmark" % sub_element.tag
+
+			list_obj.append(parsed_sub_element)
+
+		enumerated_element = (list_type,list_obj)
+
+	return enumerated_element
+
+def parse_benchmark(input_file):
+
+	# Parse the benchmark xml data
+	benchmark_root = []
+	try:
+		parser = objectify.makeparser(remove_blank_text=True,remove_comments=True,recover=True)
+		benchmark_root = objectify.parse(input_file,parser).getroot()
+
+	except XMLSyntaxError:
+		print "Format error in Benchmark XML. Please Validate!!"
+		exit()
+
+	bench_list = parse_element(benchmark_root)
+
+	return bench_list
 
 def calculate_grade(positive_hits, bench_count):
-
 	# calculate the percentile grade and return as string
-	return "{:.0%}".format(positive_hits/bench_count)
+	return "{:.0%}".format(float(positive_hits)/float(bench_count))
 
-def begin_parse(options):
+def check_command(command):
+	name = command['name']
+
+	return "\b%s\b" % name
+
+# checks, and returns the position of found command, or 0 if not found
+def check_bench(bench_e, is_seq, log_context):
+
+	global logfile
+
+	# this is to check for 'lists'
+	if type(bench_e) is tuple:
+		sub_is_seq, sub_list = bench_e
+
+		for sub_element in sub_list:
+
+			start_position = logfile.tell()
+			result = check_bench(sub_element,sub_is_seq, log_context)
+
+			if sub_is_seq:
+				if result < 0:
+					if is_verbose: print '\t\t[-] Failed to match next item in sequence. Breaking from sequence!'
+
+					# This returns a failure to the parent list because the cuurent sequential list did not have
+					# every instruction completed to specification. If the parent list is sequential, it will
+					# therefor stop executing since this instruction (which happens to be another sequentia list)
+					# did not execute accurately. Consider implementing a 'strict' value on sequential lists to
+					# decide whether to enforce this functionality or not. 
+					if is_seq: log_context = result
+					break
+				else:
+					log_context = result
+			else:
+				logfile.seek(start_position)
+
+		return log_context
+
+	# this is to check for 'commands'
+	elif type(bench_e) is dict:
+		global positive_hits
+		if is_verbose: print '\tChecking for: %-25s Sequentially: [%r]' % (bench_e['name'], is_seq,), # trialing ',' remove newline. Not Py3 compatible.
+
+		# get starting position in overall mmap
+		start_position = logfile.tell()
+
+		# iterate over logfile line by line, looking for command without its parameters
+		cmd_name = bench_e['name']
+
+		for line in iter(logfile.readline, ""):
+
+			if re.search(r'\b%s\b' % cmd_name, line, re.X) is not None:
+				# do stuff for positive match
+				if is_verbose: print '............Found!'
+				positive_hits += 1
+				return logfile.tell()
+
+		if is_verbose: print "............NOT Found!"
+		#print "Moving logfile back to start position: %d" % logfile.tell()
+		logfile.seek(start_position)
+		return -1
+
+	# this is to check for 'output' elicited by an arbitrary command
+	elif type(bench_e) is str:
+		pass
+
+
+def begin_check(options):
 
 	# get a list of benchmarks to check for
-	bench_list = process_benchmark(options.bench_file)
+	try:
+		print "[*] Start Parsing Benchmark"
+		bench = parse_benchmark(options.bench_file)
 
-	positive_hits = 0
+		global logfile
+		f = open(clean_log_file)
+		logfile = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 
-	if options.sequential:
-		
-		seq_pos = 0
+		print "[*] Start Checking Log File"
+		check_bench(bench,global_seq, 0)
 
-		# read the log file line by line
-		with open(options.log_file) as inF:
-			for line in inF:
-				# if the log file contains the current benchmark, iterate to the next benchmark and add a hit
-				if bench_list[seq_pos] in line:
-					seq_pos += 1
-					positive_hits += 1
-
-			inF.close()
-
-	else:
-
-		# since we are not searching sequentially, open up the file in mmap. This uses the file itself
-		# rather than loading the entire contents into memory.
-		f = open(options.log_file)
-		s = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
-
-		# use s.find instead of 'in' for anything after 2.7.
-		for entry in bench_list:
-			if s.find(entry) != -1:
-				positive_hits += 1
-
-		# clean up. Probably not necessary but good habit.
-		s.close()
+		logfile.close()
 		f.close()
 
+		# print results
+		print '[*] Results:'
+		print '\tFound %s out of %s' % (str(positive_hits),str(bench_count))
+		print '\tScore: %s' % (str(calculate_grade(positive_hits, bench_count)))
 
-	bench_count = len(bench_list)
-
-	# print results
-	print 'Results:'
-	print '\t Found %s out of %s' % (str(positive_hits),str(bench_count))
-	print '\t Score: %s' % (str(calculate_grade(positive_hits, bench_count)))
+	except (IOError, ValueError) as e:
+		# catch any issues with the files
+		print "Error with reading your files! Check to make sure read permissions are set and the file is closed!"
+		exit()
 
 
 def main():
@@ -77,6 +203,9 @@ def main():
 	parser.add_option("-s", action="store_true", dest="sequential",
                   help="Search for benchmarks sequentially", metavar="SEQUENTIAL")
 
+	parser.add_option("-v", action="store_true", dest="verbose",
+                  help="Verbose output", metavar="SEQUENTIAL")
+
 	(options, args) = parser.parse_args()
 
 	# make the -l and -b arguments required
@@ -86,19 +215,32 @@ def main():
 	if not options.bench_file:
 		parser.error('Benchmark file not given')
 
-	try:
-		begin_parse(options)
+	if options.sequential:
+		global global_seq
+		global_seq = True
 
-	except (IOError, ValueError) as e:
-		# catch any issues with the files
-		print "Error with reading your files! Check to make sure read permissions are set and the file is closed!"
-		exit()
+	if options.verbose:
+		global is_verbose
+		is_verbose = True
+
+	try:
+		# clean the log file to clear it of backspaces, deleted characters, etc
+		global clean_log_file
+		# use quote() to prevent command injection
+		subprocess.check_call(['cat {} | perl -pe \'s/\e([^\[\]]|\[.*?[a-zA-Z]|\].*?\a)//g\' | col -b > {}.clean'.format(quote(options.log_file), quote(options.log_file))], shell=True)
+		clean_log_file = "%s.clean" % options.log_file
+	except:
+		print "Failed to prep the script file! It may contain bad characters that will skew the results!"
+
+	try:
+		begin_check(options)
+		# delete the temp cleaned version of the log file
+		subprocess.call(['rm','%s.clean' % options.log_file])
 
 	except:
-		#print "Unexpected error:", sys.exc_info()[0] DEBUG ONLY
+		#print "Unexpected error:", sys.exc_info()[0] #DEBUG ONLY
 		#raise
 		print "Error! Make sure all files are closed, paths are accurate and options are set correctly!"
 		exit()
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()
