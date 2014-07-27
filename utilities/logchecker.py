@@ -11,8 +11,11 @@
 #
 
 import optparse
+import argparse
+from argparse import SUPPRESS, ArgumentError
 import mmap
 import sys
+from sys import exit
 import re
 from lxml import objectify
 from lxml.etree import XMLSyntaxError
@@ -38,17 +41,17 @@ def instantiate_command_object(cmd):
 	for element in cmd.getchildren():
 		
 		if element.tag in "name":
-			cmd_obj['name'] = element.text
+			cmd_obj['name'] = str(element.text)
 
 		if element.tag in "flag":
-			cmd_obj['flags'].append(element.text)
+			cmd_obj['flags'].append(str(element.text))
 
 		if element.tag in "argument":
-			cmd_obj['arguments'].append(element.text)
+			cmd_obj['arguments'].append(str(element.text))
 
 		if element.tag in "option":
-			flag = element.find('flag')
-			value = element.find('value')
+			flag = str(element.find('flag'))
+			value = str(element.find('value'))
 			cmd_obj['options'].append((flag,value))
 
 	return cmd_obj
@@ -111,11 +114,51 @@ def calculate_grade(positive_hits, bench_count):
 	# calculate the percentile grade and return as string
 	return "{:.0%}".format(float(positive_hits)/float(bench_count))
 
-def check_command(command):
-	# TODO
-	name = command['name']
+def check_command(command, line_array):
 
-	return "\b%s\b" % name
+	# build a argument parser object to do the validation of command
+
+	# Read in the benchmark data and place into argumentparser
+	c_name = command['name']
+
+	parser = argparse.ArgumentParser(prog=c_name,prefix_chars='-+', add_help=False,usage=SUPPRESS)
+	parser.parse_args([])
+
+	try:
+	
+		if len(command['arguments']) > 0:
+			parser.add_argument('pos_args', nargs='*')
+
+		for option in command['options']:
+			parser.add_argument(option[0],nargs='*')
+
+		for flag in command['flags']:
+			parser.add_argument(flag, action='store_true')
+
+		parsed_command = parser.parse_known_args(line_array[1].split())
+		parsed_command = vars(parsed_command[0])
+
+	# this catches issues when calling argparser that would normally cause the program to exit and display the help menu.
+	except (SystemExit, ArgumentError):
+		#print "\nError parsing line: '%s %s' in log file" % (c_name,line_array[1])
+		#sys.exit(1)
+		pass
+
+	# the line where the command was detected line_array[0] = command name, line_array[1] = arguments
+
+	# do checks here
+	for option in command['options']:
+		c_opt = option[0].replace("-","").replace("+","")
+		if not parsed_command[c_opt][0] in option[1]: return False
+
+	for flag in command['flags']:
+		c_flag = flag.replace("-","").replace("+","")
+		if not parsed_command[c_flag]: return False
+
+	for pos_arg in command['arguments']:
+		if not pos_arg in parsed_command['pos_args']: return False
+
+	return True
 
 def check_bench(bench_e, is_seq, log_context):
 	# checks, and returns the position of found command, or -1 if not found
@@ -142,12 +185,17 @@ def check_bench(bench_e, is_seq, log_context):
 					# therefor stop executing since this instruction (which happens to be another sequentia list)
 					# did not execute accurately. Consider implementing a 'strict' value on sequential lists to
 					# decide whether to enforce this functionality or not. 
-					if is_seq: log_context = result
+					# if is_seq: log_context = result
+					log_context = result
 					break
 				else:
 					# if it worked, store the location it was found at to be returned to the calling function for storage in start_location
 					log_context = result
 			else:
+				# if the result is failure, dont 
+				if result < 0:
+					log_context = result
+
 				# if the list is not sequential, regardless of the result, move the mmap back to the start position.
 				logfile.seek(start_position)
 
@@ -165,11 +213,20 @@ def check_bench(bench_e, is_seq, log_context):
 		# iterate over logfile line by line, looking for command without its parameters
 		for line in iter(logfile.readline, ""):
 
-			# do stuff for positive match. This is not a full implementation. Just a filler.
+			# For speed, search for the command without arguments first.
 			if re.search(r'\b%s\b' % bench_e['name'], line, re.X) is not None:
-				if is_verbose: print '............Found!'
-				positive_hits += 1
-				return logfile.tell()
+				
+				# extracting the command and its parameters from the line
+				s_str = line.rstrip().split(bench_e['name'])
+				s_str[0] = bench_e['name']
+
+				# check the command
+				result = check_command(bench_e, s_str)
+
+				if result:
+					if is_verbose: print '............Found!'
+					positive_hits += 1
+					return logfile.tell()
 
 		if is_verbose: print "............NOT Found!"
 		#print "Moving logfile back to start position: %d" % logfile.tell()
@@ -207,7 +264,7 @@ def begin_check(options):
 	except (IOError, ValueError) as e:
 		# catch any issues with the files
 		print "Error with reading your files! Check to make sure read permissions are set and the file is closed!"
-		exit()
+		sys.exit()
 
 
 def main():
@@ -255,12 +312,17 @@ def main():
 	try:
 		begin_check(options)
 		# delete the temp cleaned version of the log file
+
+	except SystemExit:
+		raise
+	except:
+		print "Unexpected error:", sys.exc_info()[0] #DEBUG ONLY
+		raise
+		#print "Error! Make sure all files are closed, paths are accurate and options are set correctly!"
+		#exit()
+	finally:
+		#cleanup, regardless of errors or not
 		subprocess.call(['rm','%s.clean' % options.log_file])
 
-	except:
-		#print "Unexpected error:", sys.exc_info()[0] #DEBUG ONLY
-		#raise
-		print "Error! Make sure all files are closed, paths are accurate and options are set correctly!"
-		exit()
 
 if __name__ == "__main__": main()
