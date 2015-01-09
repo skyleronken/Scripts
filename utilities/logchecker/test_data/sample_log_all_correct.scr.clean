@@ -1,0 +1,254 @@
+bash-3.2$ ifconfig
+lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
+	options=3<RXCSUM,TXCSUM>
+	inet6 ::1 prefixlen 128
+	inet 127.0.0.1 netmask 0xff000000
+	inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1
+	nd6 options=1<PERFORMNUD>
+gif0: flags=8010<POINTOPOINT,MULTICAST> mtu 1280
+stf0: flags=0<> mtu 1280
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=10b<RXCSUM,TXCSUM,VLAN_HWTAGGING,AV>
+	ether 3c:07:54:73:df:e5
+	nd6 options=1<PERFORMNUD>
+	media: autoselect (none)
+	status: inactive
+en1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	ether 68:a8:6d:30:be:d4
+	inet6 fe80::6aa8:6dff:fe30:bed4%en1 prefixlen 64 scopeid 0x5
+	inet 192.168.1.103 netmask 0xffffff00 broadcast 192.168.1.255
+	nd6 options=1<PERFORMNUD>
+	media: autoselect
+	status: active
+en5: flags=8963<UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
+	options=60<TSO4,TSO6>
+	ether d2:00:1b:22:7a:a0
+	media: autoselect <full-duplex>
+	status: inactive
+fw0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 4078
+	lladdr 3c:07:54:ff:fe:b2:27:aa
+	nd6 options=1<PERFORMNUD>
+	media: autoselect <full-duplex>
+	status: inactive
+p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
+	ether 0a:a8:6d:30:be:d4
+	media: autoselect
+	status: inactive
+bridge0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=63<RXCSUM,TXCSUM,TSO4,TSO6>
+	ether 3e:07:54:37:18:00
+	Configuration:
+		id 0:0:0:0:0:0 priority 0 hellotime 0 fwddelay 0
+		maxage 0 holdcnt 0 proto stp maxaddr 100 timeout 1200
+		root id 0:0:0:0:0:0 priority 0 ifcost 0 port 0
+		ipfilter disabled flags 0x2
+	member: en5 flags=3<LEARNING,DISCOVER>
+		ifmaxaddr 0 port 6 priority 0 path cost 0
+	nd6 options=1<PERFORMNUD>
+	media: <unknown type>
+	status: inactive
+utun0: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1380
+	inet6 fe80::bc26:4499:ec7e:2330%utun0 prefixlen 64 scopeid 0xa
+	inet6 fd71:a9a6:a360:8773:bc26:4499:ec7e:2330 prefixlen 64
+	nd6 options=1<PERFORMNUD>
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$
+bash-3.2$ lsof -i
+COMMAND     PID   USER	 FD   TYPE	       DEVICE SIZE/OFF NODE NAME
+UserEvent   176 skyler	  6u  IPv4 0xd40fe071551b1813	   0t0	UDP *:*
+SystemUIS   184 skyler	  7u  IPv4 0xd40fe071558c8753	   0t0	UDP *:*
+Finder	    185 skyler	  5u  IPv4 0xd40fe0715b05011b	   0t0	TCP localhost:49245->localhost:26164 (ESTABLISHED)
+Finder	    185 skyler	  7u  IPv4 0xd40fe0715b05011b	   0t0	TCP localhost:49245->localhost:26164 (ESTABLISHED)
+sharingd    196 skyler	 12u  IPv4 0xd40fe07172649fb3	   0t0	UDP *:*
+Dropbox     246 skyler	  9u  IPv4 0xd40fe07155d3f903	   0t0	TCP 192.168.1.103:57808->sjd-rd12-3d.sjc.dropbox.com:http (ESTABLISHED)
+Dropbox     246 skyler	 20u  IPv4 0xd40fe0715b03011b	   0t0	TCP localhost:26164->localhost:49245 (ESTABLISHED)
+Dropbox     246 skyler	 25u  IPv4 0xd40fe071551aff4b	   0t0	UDP *:17500
+Dropbox     246 skyler	 28u  IPv4 0xd40fe071599bb11b	   0t0	TCP *:17500 (LISTEN)
+Dropbox     246 skyler	 29u  IPv4 0xd40fe0715b030903	   0t0	TCP 192.168.1.103:57847->d-5b.sjc.dropbox.com:https (CLOSE_WAIT)
+Dropbox     246 skyler	 38u  IPv4 0xd40fe07159a8e903	   0t0	TCP localhost:26164 (LISTEN)
+CNSSelect   276 skyler	  5u  IPv4 0xd40fe071551b19fb	   0t0	UDP *:58806
+Growl	    289 skyler	  4u  IPv4 0xd40fe07159b1a903	   0t0	TCP localhost:23053 (LISTEN)
+Growl	    289 skyler	  5u  IPv6 0xd40fe071538a56fb	   0t0	TCP localhost:23053 (LISTEN)
+CIJScanne   350 skyler	  4u  IPv4 0xd40fe0717274ebe3	   0t0	UDP *:53616
+CIJScanne   350 skyler	  5u  IPv4 0xd40fe07172c206eb	   0t0	UDP *:58852
+Sublime    2877 skyler	 85u  IPv4 0xd40fe071716de11b	   0t0	TCP 192.168.1.103:57852->209-20-75-76.slicehost.net:http (CLOSE_WAIT)
+Sublime    2877 skyler	 87u  IPv4 0xd40fe071716de11b	   0t0	TCP 192.168.1.103:57852->209-20-75-76.slicehost.net:http (CLOSE_WAIT)
+plugin_ho  2882 skyler	 14u  IPv4 0xd40fe07159515903	   0t0	TCP 192.168.1.103:49281->209-20-75-76.slicehost.net:http (CLOSE_WAIT)
+plugin_ho  2882 skyler	 21u  IPv4 0xd40fe07159515903	   0t0	TCP 192.168.1.103:49281->209-20-75-76.slicehost.net:http (CLOSE_WAIT)
+plugin_ho  2882 skyler	 26u  IPv4 0xd40fe0717174a11b	   0t0	TCP localhost:57962->localhost:57848 (ESTABLISHED)
+Google	  16770 skyler	  9u  IPv4 0xd40fe071716f3903	   0t0	TCP 192.168.1.103:57845->64.233.171.188:5228 (ESTABLISHED)
+Google	  16770 skyler	 11u  IPv4 0xd40fe07159a8e11b	   0t0	TCP 192.168.1.103:57584->173.192.82.196-static.reverse.softlayer.com:http (ESTABLISHED)
+Google	  16770 skyler	 59u  IPv4 0xd40fe0717168911b	   0t0	TCP 192.168.1.103:57842->74.125.22.125:jabber-client (ESTABLISHED)
+Google	  16770 skyler	 66u  IPv4 0xd40fe0717177e11b	   0t0	TCP 192.168.1.103:57806->iad23s24-in-f5.1e100.net:https (ESTABLISHED)
+Google	  16770 skyler	 90u  IPv4 0xd40fe07172705383	   0t0	UDP 192.168.1.103:65126
+Google	  16770 skyler	 91u  IPv4 0xd40fe071716cb903	   0t0	TCP 192.168.1.103:57963->192.168.1.27:8060 (ESTABLISHED)
+GitHub	  19674 skyler	  5u  IPv4 0xd40fe0717169611b	   0t0	TCP localhost:25035 (LISTEN)
+GitHub	  19674 skyler	  6u  IPv6 0xd40fe0717226707b	   0t0	TCP localhost:25035 (LISTEN)
+Python	  21849 skyler	  4u  IPv4 0xd40fe0715ac3711b	   0t0	TCP localhost:57848 (LISTEN)
+Python	  21849 skyler	  7u  IPv4 0xd40fe0717174a903	   0t0	TCP localhost:57848->localhost:57962 (ESTABLISHED)
+bash-3.2$ whois google.com
+
+Whois Server Version 2.0
+
+Domain names in the .com and .net domains can now be registered
+with many different competing registrars. Go to http://www.internic.net
+for detailed information.
+
+GOOGLE.COM.AFRICANBATS.ORG
+GOOGLE.COM.AR
+GOOGLE.COM.ARTVISUALRIO.COM
+GOOGLE.COM.AU
+GOOGLE.COM.BEYONDWHOIS.COM
+GOOGLE.COM.BR
+GOOGLE.COM.CN
+GOOGLE.COM.CO
+GOOGLE.COM.DO
+GOOGLE.COM.HACKED.BY.JAPTRON.ES
+GOOGLE.COM.HAS.LESS.FREE.PORN.IN.ITS.SEARCH.ENGINE.THAN.SECZY.COM
+GOOGLE.COM.HK
+GOOGLE.COM.IS.APPROVED.BY.NUMEA.COM
+GOOGLE.COM.IS.HOSTED.ON.PROFITHOSTING.NET
+GOOGLE.COM.IS.NOT.HOSTED.BY.ACTIVEDOMAINDNS.NET
+GOOGLE.COM.LASERPIPE.COM
+GOOGLE.COM.LOLOLOLOLOL.SHTHEAD.COM
+GOOGLE.COM.MX
+GOOGLE.COM.MY
+GOOGLE.COM.NS1.CHALESHGAR.COM
+GOOGLE.COM.NS2.CHALESHGAR.COM
+GOOGLE.COM.PE
+GOOGLE.COM.PK
+GOOGLE.COM.SA
+GOOGLE.COM.SHQIPERIA.COM
+GOOGLE.COM.SOUTHBEACHNEEDLEARTISTRY.COM
+GOOGLE.COM.SPAMMING.IS.UNETHICAL.PLEASE.STOP.THEM.HUAXUEERBAN.COM
+GOOGLE.COM.SPROSIUYANDEKSA.RU
+GOOGLE.COM.SUCKS.FIND.CRACKZ.WITH.SEARCH.GULLI.COM
+GOOGLE.COM.TR
+GOOGLE.COM.TW
+GOOGLE.COM.UA
+GOOGLE.COM.UY
+GOOGLE.COM.VABDAYOFF.COM
+GOOGLE.COM.VN
+GOOGLE.COM.WORDT.DOOR.VEEL.WHTERS.GEBRUIKT.SERVERTJE.NET
+GOOGLE.COM.YUCEHOCA.COM
+GOOGLE.COM.YUCEKIRBAC.COM
+GOOGLE.COM.ZNAET.PRODOMEN.COM
+GOOGLE.COM.ZZZZZ.GET.LAID.AT.WWW.SWINGINGCOMMUNITY.COM
+GOOGLE.COM.ZZZZZZZZZZZZZ.GET.ONE.MILLION.DOLLARS.AT.WWW.UNIMUNDI.COM
+GOOGLE.COM.ZZZZZZZZZZZZZZZZZZZZZZZZZZ.HAVENDATA.COM
+GOOGLE.COMMAS2CHAPTERS.COM
+GOOGLE.COM
+
+To single out one record, look it up with "xxx", where xxx is one of the
+records displayed above. If the records are the same, look them up
+with "=xxx" to receive a full display for each record.
+
+>>> Last update of whois database: Mon, 21 Jul 2014 09:54:49 UTC <<<
+
+NOTICE: The expiration date displayed in this record is the date the
+registrar's sponsorship of the domain name registration in the registry is
+currently set to expire. This date does not necessarily reflect the expiration
+date of the domain name registrant's agreement with the sponsoring
+registrar.  Users may consult the sponsoring registrar's Whois database to
+view the registrar's reported date of expiration for this registration.
+
+TERMS OF USE: You are not authorized to access or query our Whois
+database through the use of electronic processes that are high-volume and
+automated except as reasonably necessary to register domain names or
+modify existing registrations; the Data in VeriSign Global Registry
+Services' ("VeriSign") Whois database is provided by VeriSign for
+information purposes only, and to assist persons in obtaining information
+about or related to a domain name registration record. VeriSign does not
+guarantee its accuracy. By submitting a Whois query, you agree to abide
+by the following terms of use: You agree that you may use this Data only
+for lawful purposes and that under no circumstances will you use this Data
+to: (1) allow, enable, or otherwise support the transmission of mass
+unsolicited, commercial advertising or solicitations via e-mail, telephone,
+or facsimile; or (2) enable high volume, automated, electronic processes
+that apply to VeriSign (or its computer systems). The compilation,
+repackaging, dissemination or other use of this Data is expressly
+prohibited without the prior written consent of VeriSign. You agree not to
+use electronic processes that are automated and high-volume to access or
+query the Whois database except as reasonably necessary to register
+domain names or modify existing registrations. VeriSign reserves the right
+to restrict your access to the Whois database in its sole discretion to ensure
+operational stability.	VeriSign may restrict or terminate your access to the
+Whois database for failure to abide by these terms of use. VeriSign
+reserves the right to modify these terms at any time.
+
+The Registry database contains ONLY .COM, .NET, .EDU domains and
+Registrars.
+bash-3.2$ ls -la -a
+total 128
+drwxr-xr-x  8 skyler  staff    272 Jul 21 05:54 .
+drwxr-xr-x  5 skyler  staff    170 Jul 20 11:10 ..
+-rw-r--r--@ 1 skyler  staff   6148 Jul 20 07:38 .DS_Store
+-rw-r--r--  1 skyler  staff    871 Jul 20 06:54 benchmark_test_data.xml
+-rw-r--r--  1 skyler  staff  16704 Jul 19 19:33 sample_log.scr
+-rw-r--r--  1 skyler  staff  12201 Jul 20 06:18 sample_log_break_seq.scr
+-rw-r--r--  1 skyler  staff   6777 Jul 20 06:40 sample_log_nested_seq.scr
+-rw-r--r--  1 skyler  staff   9658 Jul 21 05:55 screenlog.0
+bash-3.2$ netstat -nap TCP
+Active Internet connections (including servers)
+Proto Recv-Q Send-Q  Local Address	    Foreign Address	   (state)
+tcp4	   0	  0  127.0.0.1.57848	    127.0.0.1.57962	   ESTABLISHED
+tcp4	   0	  0  127.0.0.1.57962	    127.0.0.1.57848	   ESTABLISHED
+tcp4	   0	  0  127.0.0.1.57848	    *.* 		   LISTEN
+tcp4	  37	  0  192.168.1.103.57847    108.160.166.61.443	   CLOSE_WAIT
+tcp4	   0	  0  192.168.1.103.57845    64.233.171.188.5228    ESTABLISHED
+tcp4	   0	  0  192.168.1.103.57842    74.125.22.125.5222	   ESTABLISHED
+tcp4	   0	  0  192.168.1.103.57828    17.110.224.17.5223	   ESTABLISHED
+tcp4	   0	  0  192.168.1.103.57808    108.160.167.160.80	   ESTABLISHED
+tcp4	   0	  0  192.168.1.103.57584    173.192.82.196.80	   ESTABLISHED
+tcp6	   0	  0  *.631		    *.* 		   LISTEN
+tcp4	   0	  0  *.631		    *.* 		   LISTEN
+tcp6	   0	  0  ::1.25035		    *.* 		   LISTEN
+tcp4	   0	  0  127.0.0.1.25035	    *.* 		   LISTEN
+tcp4	   0	  0  192.168.1.103.49281    209.20.75.76.80	   CLOSE_WAIT
+tcp4	   0	  0  127.0.0.1.26164	    127.0.0.1.49245	   ESTABLISHED
+tcp4	   0	  0  127.0.0.1.49245	    127.0.0.1.26164	   ESTABLISHED
+tcp4	   0	  0  127.0.0.1.26164	    *.* 		   LISTEN
+tcp4	   0	  0  *.17500		    *.* 		   LISTEN
+tcp6	   0	  0  ::1.23053		    *.* 		   LISTEN
+tcp4	   0	  0  127.0.0.1.23053	    *.* 		   LISTEN
+tcp6	   0	  0  fd71:a9a6:a360:8.4488  *.* 		   LISTEN
+tcp4	   0	  0  127.0.0.1.49153	    127.0.0.1.1023	   ESTABLISHED
+tcp4	   0	  0  127.0.0.1.1023	    127.0.0.1.49153	   ESTABLISHED
+tcp4	   0	  0  127.0.0.1.49153	    *.* 		   LISTEN
+tcp4	   0	  0  127.0.0.1.49152	    *.* 		   LISTEN
+tcp4	   0	  0  *.88		    *.* 		   LISTEN
+tcp6	   0	  0  *.88		    *.* 		   LISTEN
+tcp4	   0	  0  127.0.0.1.631	    *.* 		   LISTEN
+tcp6	   0	  0  ::1.631		    *.* 		   LISTEN
+tcp4	   0	  0  *.445		    *.* 		   LISTEN
+tcp6	   0	  0  *.445		    *.* 		   LISTEN
+tcp4	   0	  0  *.5900		    *.* 		   LISTEN
+tcp6	   0	  0  *.5900		    *.* 		   LISTEN
+tcp4	   0	  0  *.548		    *.* 		   LISTEN
+tcp6	   0	  0  *.548		    *.* 		   LISTEN
+bash-3.2$ whoami
+skyler
+bash-3.2$ pwd
+/Users/skyler/Desktop/Development/Scripts/utilities/test_data
+bash-3.2$ cd
+bash-3.2$ pwd
+/Users/skyler
+bash-3.2$ arp -a
+? (192.168.1.1) at 60:a4:4c:6a:48:b0 on en1 ifscope [ethernet]
+? (192.168.1.27) at cc:6d:a0:7a:66:9b on en1 ifscope [ethernet]
+? (192.168.1.55) at 88:87:17:e0:34:d9 on en1 ifscope [ethernet]
+? (192.168.1.255) at ff:ff:ff:ff:ff:ff on en1 ifscope [ethernet]
+bash-3.2$ exit
+exit

@@ -304,7 +304,7 @@ def main():
 		# clean the log file to clear it of backspaces, deleted characters, etc
 		global clean_log_file
 		# use quote() to prevent command injection
-		subprocess.check_call(['cat {} | perl -pe \'s/\e([^\[\]]|\[.*?[a-zA-Z]|\].*?\a)//g\' | col -b > {}.clean'.format(quote(options.log_file), quote(options.log_file))], shell=True)
+		subprocess.check_call(['cat {} | perl -pe \'s/\e([^\[\]]|\[.*?[a-zA-Z]|\].*?\a)//g\' | col -b | col -b > {}.clean'.format(quote(options.log_file), quote(options.log_file))], shell=True)
 		clean_log_file = "%s.clean" % options.log_file
 	except:
 		print "Failed to prep the script file! It may contain bad characters that will skew the results!"
@@ -322,7 +322,8 @@ def main():
 		#exit()
 	finally:
 		#cleanup, regardless of errors or not
-		subprocess.call(['rm','%s.clean' % options.log_file])
+		#subprocess.call(['rm','%s.clean' % options.log_file])
+		pass
 
 
 if __name__ == "__main__": main()
