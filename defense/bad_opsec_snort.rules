@@ -1,0 +1,10 @@
+#
+# Snort rules for use in CTF Scenarios to detect bad OPSEC
+#
+
+
+# Detect source/destination port 4444
+
+# Detect non-ephemeral port range
+
+# Detect default Nmap scan
