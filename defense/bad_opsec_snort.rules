@@ -1,10 +1,30 @@
 #
 # Snort rules for use in CTF Scenarios to detect bad OPSEC
 #
+# These are rough rules. Need limiting and tuning.
 
 
-# Detect source/destination port 4444
+# Detect destination port 4444
+alert tcp any any -> any 4444 (msg:"Default Metasploit port!"; sid:1000003)
 
 # Detect non-ephemeral port range
+portvar EPHEMERAL_PORTS [1024:5000,32768:65535]
+portvar NON_EPHEMERAL_PORTS !$EPHEMERAL_PORTS
+alert tcp any $NON_EPHEMERAL_PORTS -> any any (msg:"Non-Ephmeral Port being used to initiate connection"; flags:S; flow:not_established; sid:1000002)
+
+# Both source and destination are reserved ports
+alert tcp any :1024 <> any :1024 (msg:"Privileged Ports being used for both source and destination!"; sid:1000001)
 
 # Detect default Nmap scan
+
+# FIN Scans
+alert tcp any any -> $HOME_NET any (msg:"FIN Scan";flags: F; seq:1;) 
+
+# Null Scans
+alert tcp any any -> $HOME_NET any (msg:"NULL Scan";flags: 0;) 
+
+#Nmap Ping
+alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"ICMP PING NMAP"; dsize:0; itype:8; reference:arachnids,162; classtype:attempted-recon; sid:469; rev:3;)
+
+#Syn Scan
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"SCAN synscan portscan"; id: 39426; flags: SF;reference:arachnids,441; classtype:attempted-recon; sid:630; rev:1;)
